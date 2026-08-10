@@ -37,7 +37,7 @@
 
         <div class="content-wrapper p-3">
             <div class="event-header text-center">
-                <h5 class="font-weight-bold mb-1"><i class="fas fa-quran"></i> TASYAKURAN DIROSA ANGKATAN IX</h5>
+                <h5 class="font-weight-bold mb-1">TASYAKURAN DIROSA ANGKATAN IX</h5>
                 <p class="mb-1 font-italic" style="font-size: 13px; color: #e2e8f0;">"Harmoni Cinta dan Perjuangan dengan Al-Qur'an"</p>
                 <hr style="border-color: rgba(255,255,255,0.2); margin: 6px 0;">
                 <small><i class="fas fa-calendar-alt"></i> Ahad, 20 September 2026 &nbsp;|&nbsp; <i class="fas fa-map-marker-alt"></i> Best Western Hotel, Palu</small>
@@ -183,14 +183,15 @@
                     let namaPengambil = r[3] || '-';
                     let status = r[7] || 'Lunas';
                     let badgeColor = status === 'Lunas' ? 'badge-danger' : 'badge-warning text-white';
+                    let noTiketStr = r[0];
                     
-                    let pesanWA = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Yth. ${namaPengambil}.\n\nKami dari Panitia Tasyakuran Dirosa Angkatan IX mengingatkan terkait pengambilan Tiket Nomor: *${r[0]}*. Status pembayaran saat ini: *${status}*. Mohon kiranya dana tiket dapat segera disetorkan kepada PJ terkait.\n\nJazaakumullahu khairan.`;
+                    let pesanWA = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Yth. ${namaPengambil}.\n\nKami dari Panitia Tasyakuran Dirosa Angkatan IX mengingatkan terkait tiket yang telah diambil dengan Nomor: *${noTiketStr}* (Status: *${status}*).\n\nDana tiket yang sudah terjual mohon dapat segera ditransfer melalui No. Rekening:\n*7113235807* (Bank BSI) a.n. *Masnah*.\n\nJazaakumullahu khairan katsiran.`;
                     let encodedPesan = encodeURIComponent(pesanWA);
                     
                     let cleanPhone = noHp.replace(/^0/, '62').replace(/[^0-9]/g, '');
                     let waLink = noHp ? `<div class="btn-group btn-group-xs">
-                        <a href="https://wa.me/${cleanPhone}?text=${encodedPesan}" target="_blank" class="btn btn-success" title="Kirim Pesan WhatsApp"><i class="fab fa-whatsapp"></i> Chat WA</a>
-                        <button class="btn btn-outline-secondary" onclick="copyWA('${pesanWA.replace(/'/g, "\\'")}', '${noHp}')" title="Salin Pesan jika nomor tidak terdaftar"><i class="fas fa-copy"></i></button>
+                        <a href="https://wa.me/${cleanPhone}?text=${encodedPesan}" target="_blank" class="btn btn-success" title="Kirim Pesan WhatsApp"><i class="fab fa-whatsapp"></i> Chat (${noHp})</a>
+                        <button class="btn btn-outline-secondary" onclick="copyWA('${pesanWA.replace(/'/g, "\\'")}', '${noHp}')" title="Salin Pesan"><i class="fas fa-copy"></i></button>
                     </div>` : '-';
 
                     return `<tr>
@@ -249,7 +250,7 @@
 
         function copyWA(text, phone) {
             navigator.clipboard.writeText(text).then(() => {
-                alert(`Pesan pengingat untuk nomor ${phone} berhasil disalin ke Clipboard!\n\nSilakan tempel (Paste) manual di aplikasi chat atau kirimkan via SMS.`);
+                alert(`Pesan pengingat dan nomor rekening BSI berhasil disalin ke Clipboard untuk nomor ${phone}!\n\nSilakan tempel (Paste) manual jika diperlukan.`);
             }).catch(err => {
                 alert("Gagal menyalin teks otomatis.");
             });
@@ -298,7 +299,6 @@
         function closeInput() { document.getElementById('input-panel').style.display = 'none'; }
         function selectTicket(no) { 
             document.getElementById('no').value = no; 
-            showObj = true;
             showAuth(); 
             window.scrollTo({ top: 150, behavior: 'smooth' });
         }

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kontrol Tiket Tasyakuran Dirosa Angkatan IX</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --emerald: #064e3b; }
+        .sidebar-dark-emerald { background-color: var(--emerald) !important; }
+        .nav-link.active { background-color: #047857 !important; color: #fff !important; }
+        .ticket-box { padding: 5px; text-align: center; border-radius: 3px; color: white; font-weight: bold; font-size: 10px; border: 1px solid white; cursor: pointer; transition: transform 0.2s; }
+        .ticket-box:hover { transform: scale(1.1); }
+        .bg-hijau { background-color: #10b981; } .bg-merah { background-color: #ef4444; }
+        #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(35px, 1fr)); gap: 3px; }
+        .chart-container { max-width: 200px; margin: 0 auto; }
+        .table-responsive { overflow-x: auto; max-height: 400px; }
+        .event-header { background: linear-gradient(135deg, #064e3b, #047857); color: white; border-radius: 5px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        @media print { .no-print { display: none !important; } }
+        @media (max-width: 768px) { .content-wrapper { padding: 10px !important; } }
+    </style>
+</head>
+<body class="layout-fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar sidebar-dark-emerald elevation-4 no-print">
+            <div class="brand-link text-center border-bottom"><span class="brand-text font-weight-bold text-white" style="font-size: 12px;">Tasyakuran Dirosa Angk. IX</span></div>
+            <div class="sidebar">
+                <div class="text-center py-3"><img src="https://raw.githubusercontent.com/yunitarizkyzafitra-bit/E-Tiket_Dirosa_2026/main/logo%20MWD.png" width="80%" style="border-radius: 5px; border: 2px solid white;"></div>
+                <nav class="mt-2"><ul class="nav nav-pills nav-sidebar flex-column"><li class="nav-item"><a href="#" class="nav-link active"><i class="nav-icon fas fa-tachometer-alt"></i> <p>Dashboard Utama</p></a></li></ul></nav>
+                <div style="position: absolute; bottom: 20px; width: 100%; padding: 0 15px;"><img src="https://raw.githubusercontent.com/yunitarizkyzafitra-bit/E-Tiket_Dirosa_2026/main/Gambar%20Tiket.png" width="100%" style="border-radius: 5px;"></div>
+            </div>
+        </aside>
+
+        <div class="content-wrapper p-3">
+            <!-- Header Acara Profesional -->
+            <div class="event-header text-center">
+                <h5 class="font-weight-bold mb-1"><i class="fas fa-quran"></i> TASYAKURAN DIROSA ANGKATAN IX</h5>
+                <p class="mb-1 font-italic" style="font-size: 14px;">"Harmoni Cinta dan Perjuangan dengan Al-Qur'an"</p>
+                <hr style="border-color: rgba(255,255,255,0.2); margin: 8px 0;">
+                <small><i class="fas fa-calendar-alt"></i> Ahad, 20 September 2026 &nbsp;|&nbsp; <i class="fas fa-map-marker-alt"></i> Best Western Hotel, Palu</small>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card p-3"><div class="chart-container"><canvas id="myChart"></canvas></div></div>
+                    <div class="card p-2 text-center"><h6>Total Presentase Tiket Terjual</h6><h2 id="total-percent" class="text-success font-weight-bold">0%</h2></div>
+                </div>
+                <div class="col-md-7">
+                    <div class="card p-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <button class="btn btn-warning btn-sm" onclick="window.print()"><i class="fas fa-file-pdf"></i> Export PDF</button>
+                            <button class="btn btn-primary btn-sm" onclick="showAuth()"><i class="fas fa-lock"></i> Input / Kontrol Tiket</button>
+                        </div>
+                        <div id="input-panel" style="display:none;" class="bg-light p-3 border rounded">
+                            <h6 class="text-bold text-dark mb-2"><i class="fas fa-ticket-alt"></i> Form Kontrol & Penjualan Tiket</h6>
+                            <input type="number" id="no" class="form-control form-control-sm" placeholder="No Tiket (1-450)" readonly>
+                            <input type="date" id="tgl" class="form-control form-control-sm mt-1">
+                            <select id="pj" class="form-control form-control-sm mt-1">
+                                <option>Ummu Nabila</option><option>Teteh Lilis</option>
+                                <option>Ummu Yasmin</option><option>Cadangan</option>
+                            </select>
+                            <input type="text" id="username" class="form-control form-control-sm mt-1" placeholder="Username PJ">
+                            <input type="password" id="pin" class="form-control form-control-sm mt-1" placeholder="PIN Akses PJ">
+                            <input type="text" id="nama" class="form-control form-control-sm mt-1" placeholder="Nama Pengambilan Tiket">
+                            <input type="text" id="hp" class="form-control form-control-sm mt-1" placeholder="No HP (WhatsApp)">
+                            <input type="text" id="alamat" class="form-control form-control-sm mt-1" placeholder="Alamat Pengambil">
+                            <input type="number" id="jumlah" class="form-control form-control-sm mt-1" placeholder="Jumlah Tiket Diambil" value="1">
+                            <select id="status_bayar" class="form-control form-control-sm mt-1">
+                                <option value="Lunas">Lunas</option>
+                                <option value="Belum">Belum Lunas</option>
+                            </select>
+                            <button id="save-btn" class="btn btn-success btn-sm mt-2 btn-block" onclick="save()">Simpan Data</button>
+                            <button class="btn btn-secondary btn-sm mt-1 btn-block" onclick="closeInput()">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-3 mt-3"><h5>Grid Wilayah Tiket (1 - 450)</h5><div id="grid"></div></div>
+
+            <div class="card p-3">
+                <h5>Riwayat & Kontrol Transaksi Tiket</h5>
+                <div class="input-group mb-2 no-print">
+                    <input type="text" id="search-pj" class="form-control form-control-sm" placeholder="Cari berdasarkan nama, PJ, atau status..." onkeyup="filterTable()">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-sm text-xs">
+                        <thead class="bg-dark">
+                            <tr>
+                                <th>Tgl</th><th>No</th><th>PJ</th><th>Nama Pengambil</th><th>HP / WA</th><th>Alamat</th><th>Jml</th><th>Status</th><th>Aksi WA</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaksi-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyhI87O2-G75tfGoWkTqq2Bb-Vx9G0_IbL_mmLQ4A6UJtpUPEPEO6WTuglzE6hiW_JiYA/exec";
+        const PINS = { "Ummu Nabila": "28820", "Teteh Lilis": "22550", "Ummu Yasmin": "22880", "Cadangan": "8890" };
+        const RANGES = { "Ummu Nabila": [1, 100], "Teteh Lilis": [101, 200], "Ummu Yasmin": [201, 350], "Cadangan": [351, 450] };
+        
+        let soldTickets = [];
+        let isSaving = false;
+
+        async function init() {
+            try {
+                const res = await fetch(GAS_URL);
+                const data = await res.json();
+                soldTickets = data.map(r => parseInt(r[0])); 
+                
+                const tbody = document.getElementById('transaksi-body');
+                tbody.innerHTML = data.slice().reverse().map(r => {
+                    let noHp = r[4] || '';
+                    let namaPengambil = r[3] || '-';
+                    let status = r[7] || 'Terjual';
+                    let badgeColor = status === 'Lunas' ? 'badge-success' : 'badge-danger';
+                    let pesanWA = encodeURIComponent(`Assalamu'alaikum ${namaPengambil}, pengingat untuk tiket Tasyakuran Dirosa Angkatan IX (Nomor Tiket: ${r[0]}). Mohon segera mengumpulkan dana tiket yang sudah dipesan. Terima kasih.`);
+                    let waLink = noHp ? `<a href="https://wa.me/${noHp.replace(/^0/, '62')}?text=${pesanWA}" target="_blank" class="btn btn-success btn-xs" title="Kirim Pengingat WA"><i class="fab fa-whatsapp"></i> Chat</a>` : '-';
+
+                    return `<tr>
+                        <td>${r[1] || '-'}</td>
+                        <td>${r[0]}</td>
+                        <td>${r[2] || '-'}</td>
+                        <td>${namaPengambil}</td>
+                        <td>${noHp}</td>
+                        <td>${r[5] || '-'}</td>
+                        <td>${r[6] || 1}</td>
+                        <td><span class="badge ${badgeColor}">${status}</span></td>
+                        <td>${waLink}</td>
+                    </tr>`;
+                }).join('');
+                
+                let sold = soldTickets.length;
+                document.getElementById('total-percent').innerText = ((sold / 450) * 100).toFixed(1) + "%";
+                new Chart(document.getElementById('myChart'), { type: 'doughnut', data: { datasets: [{ data: [sold, 450-sold], backgroundColor: ['#ef4444', '#10b981'] }] } });
+                
+                const grid = document.getElementById('grid'); grid.innerHTML = "";
+                for(let i=1; i<=450; i++) {
+                    let isSold = soldTickets.includes(i);
+                    grid.innerHTML += `<div class="ticket-box ${isSold ? 'bg-merah' : 'bg-hijau'}" ${isSold ? '' : `onclick="selectTicket(${i})"`}>${i}</div>`;
+                }
+            } catch(e) { console.error("Gagal memuat data:", e); }
+        }
+
+        async function save() {
+            if (isSaving) return;
+            const pj = document.getElementById('pj').value;
+            const no = parseInt(document.getElementById('no').value);
+            const pin = document.getElementById('pin').value;
+            
+            if (PINS[pj] !== pin) return alert("PIN Akses Salah untuk PJ ini!");
+            if (no < RANGES[pj][0] || no > RANGES[pj][1]) return alert(`Nomor tiket ${no} di luar jangkauan wilayah tugas Anda (${RANGES[pj][0]}-${RANGES[pj][1]})!`);
+            if (soldTickets.includes(no)) return alert("Nomor tiket ini sudah tercatat terjual!");
+
+            isSaving = true; document.getElementById('save-btn').innerText = "Menyimpan...";
+            const payload = { 
+                no: no, 
+                tgl: document.getElementById('tgl').value, 
+                pj: pj, 
+                username: document.getElementById('username').value, 
+                pin: pin, 
+                nama: document.getElementById('nama').value,
+                hp: document.getElementById('hp').value, 
+                alamat: document.getElementById('alamat').value,
+                jumlah: document.getElementById('jumlah').value,
+                status: document.getElementById('status_bayar').value
+            };
+            
+            try {
+                await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+                alert("Data tiket berhasil disimpan!"); location.reload();
+            } catch (e) { alert("Gagal koneksi ke server."); isSaving = false; }
+        }
+
+        function filterTable() {
+            let input = document.getElementById("search-pj").value.toUpperCase();
+            let tr = document.getElementById("transaksi-body").getElementsByTagName("tr");
+            for (let i = 0; i < tr.length; i++) {
+                tr[i].style.display = tr[i].innerText.toUpperCase().indexOf(input) > -1 ? "" : "none";
+            }
+        }
+
+        function showAuth() { document.getElementById('input-panel').style.display = 'block'; }
+        function closeInput() { document.getElementById('input-panel').style.display = 'none'; }
+        function selectTicket(no) { document.getElementById('no').value = no; showAuth(); }
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -181,14 +181,14 @@
                 
                 const tbody = document.getElementById('transaksi-body');
                 tbody.innerHTML = data.slice().reverse().map(r => {
-                    let noTiketStr = r[0] || '-';
-                    let tglStr = r[1] || '-';
-                    let pjStr = r[2] || '-';
-                    let namaPengambil = r[3] || '-';
-                    let noHp = r[4] || '-';
-                    let alamatStr = r[5] || '-';
-                    let jumlahStr = r[6] || '1';
-                    let status = r[7] || 'Lunas';
+                    let tglStr       = r[0] || '-';
+                    let noTiketStr   = r[1] || '-';
+                    let pjStr        = r[2] || '-';
+                    let namaPengambil= r[3] || '-';
+                    let noHp         = r[4] || '-';
+                    let alamatStr    = r[5] || '-';
+                    let jumlahStr    = r[6] || '1';
+                    let status       = r[7] || 'Lunas';
                     
                     let badgeColor = status === 'Lunas' ? 'badge-danger' : 'badge-warning text-white';
                     

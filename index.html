@@ -174,7 +174,9 @@
                 data.forEach(r => {
                     let noTiket = parseInt(r[0]);
                     let statusBayar = r[7] || 'Lunas';
-                    ticketDataMap[noTiket] = statusBayar;
+                    if (!isNaN(noTiket)) {
+                        ticketDataMap[noTiket] = statusBayar;
+                    }
                 });
                 
                 const tbody = document.getElementById('transaksi-body');
@@ -193,11 +195,15 @@
                     let pesanWA = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Yth. ${namaPengambil}.\n\nKami dari Panitia Tasyakuran Dirosa Angkatan IX mengingatkan terkait tiket yang telah diambil dengan Nomor: *${noTiketStr}* (Status: *${status}*).\n\nDana tiket yang sudah terjual mohon dapat segera ditransfer melalui No. Rekening:\n*7113235807* (Bank BSI) a.n. *Masnah*.\n\nJazaakumullahu khairan katsiran.`;
                     let encodedPesan = encodeURIComponent(pesanWA);
                     
-                    let cleanPhone = noHp !== '-' ? noHp.replace(/^0/, '62').replace(/[^0-9]/g, '') : '';
-                    let waLink = cleanPhone ? `<div class="btn-group btn-group-xs">
-                        <a href="https://wa.me/${cleanPhone}?text=${encodedPesan}" target="_blank" class="btn btn-success" title="Kirim Pesan WhatsApp"><i class="fab fa-whatsapp"></i> Chat (${noHp})</a>
-                        <button class="btn btn-outline-secondary" onclick="copyWA('${pesanWA.replace(/'/g, "\\'")}', '${noHp}')" title="Salin Pesan"><i class="fas fa-copy"></i></button>
-                    </div>` : '-';
+                    let cleanPhone = '';
+                    if (noHp && noHp !== '-') {
+                        cleanPhone = String(noHp).trim().replace(/^0/, '62').replace(/[^0-9]/g, '');
+                    }
+                    
+                    let waLink = cleanPhone ? `
+                        <a href="https://wa.me/${cleanPhone}?text=${encodedPesan}" target="_blank" class="btn btn-success btn-xs" title="Kirim Pesan WhatsApp Langsung">
+                            <i class="fab fa-whatsapp"></i> Chat (${noHp})
+                        </a>` : '-';
 
                     return `<tr>
                         <td>${tglStr}</td>
@@ -251,14 +257,6 @@
                     grid.innerHTML += `<div class="ticket-box ${boxClass}" ${!statusStat ? `onclick="selectTicket(${i})"` : `title="${titleText} (Sudah Diambil)"`}>${i}</div>`;
                 }
             } catch(e) { console.error("Gagal sinkronisasi data:", e); }
-        }
-
-        function copyWA(text, phone) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert(`Pesan penagihan transfer BSI berhasil disalin untuk nomor ${phone}!\n\nSilakan tempel (Paste) manual jika diperlukan.`);
-            }).catch(err => {
-                alert("Gagal menyalin teks otomatis.");
-            });
         }
 
         async function save() {

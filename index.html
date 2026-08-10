@@ -179,29 +179,34 @@
                 
                 const tbody = document.getElementById('transaksi-body');
                 tbody.innerHTML = data.slice().reverse().map(r => {
-                    let noHp = r[4] || '';
+                    let noTiketStr = r[0] || '-';
+                    let tglStr = r[1] || '-';
+                    let pjStr = r[2] || '-';
                     let namaPengambil = r[3] || '-';
+                    let noHp = r[4] || '-';
+                    let alamatStr = r[5] || '-';
+                    let jumlahStr = r[6] || '1';
                     let status = r[7] || 'Lunas';
+                    
                     let badgeColor = status === 'Lunas' ? 'badge-danger' : 'badge-warning text-white';
-                    let noTiketStr = r[0];
                     
                     let pesanWA = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Yth. ${namaPengambil}.\n\nKami dari Panitia Tasyakuran Dirosa Angkatan IX mengingatkan terkait tiket yang telah diambil dengan Nomor: *${noTiketStr}* (Status: *${status}*).\n\nDana tiket yang sudah terjual mohon dapat segera ditransfer melalui No. Rekening:\n*7113235807* (Bank BSI) a.n. *Masnah*.\n\nJazaakumullahu khairan katsiran.`;
                     let encodedPesan = encodeURIComponent(pesanWA);
                     
-                    let cleanPhone = noHp.replace(/^0/, '62').replace(/[^0-9]/g, '');
-                    let waLink = noHp ? `<div class="btn-group btn-group-xs">
+                    let cleanPhone = noHp !== '-' ? noHp.replace(/^0/, '62').replace(/[^0-9]/g, '') : '';
+                    let waLink = cleanPhone ? `<div class="btn-group btn-group-xs">
                         <a href="https://wa.me/${cleanPhone}?text=${encodedPesan}" target="_blank" class="btn btn-success" title="Kirim Pesan WhatsApp"><i class="fab fa-whatsapp"></i> Chat (${noHp})</a>
                         <button class="btn btn-outline-secondary" onclick="copyWA('${pesanWA.replace(/'/g, "\\'")}', '${noHp}')" title="Salin Pesan"><i class="fas fa-copy"></i></button>
                     </div>` : '-';
 
                     return `<tr>
-                        <td>${r[1] || '-'}</td>
-                        <td class="font-weight-bold text-center">${r[0]}</td>
-                        <td>${r[2] || '-'}</td>
+                        <td>${tglStr}</td>
+                        <td class="font-weight-bold text-center">${noTiketStr}</td>
+                        <td>${pjStr}</td>
                         <td>${namaPengambil}</td>
                         <td>${noHp}</td>
-                        <td>${r[5] || '-'}</td>
-                        <td class="text-center">${r[6] || 1}</td>
+                        <td>${alamatStr}</td>
+                        <td class="text-center">${jumlahStr}</td>
                         <td class="text-center"><span class="badge ${badgeColor}">${status}</span></td>
                         <td class="text-center no-print">${waLink}</td>
                     </tr>`;
@@ -250,7 +255,7 @@
 
         function copyWA(text, phone) {
             navigator.clipboard.writeText(text).then(() => {
-                alert(`Pesan pengingat dan nomor rekening BSI berhasil disalin ke Clipboard untuk nomor ${phone}!\n\nSilakan tempel (Paste) manual jika diperlukan.`);
+                alert(`Pesan penagihan transfer BSI berhasil disalin untuk nomor ${phone}!\n\nSilakan tempel (Paste) manual jika diperlukan.`);
             }).catch(err => {
                 alert("Gagal menyalin teks otomatis.");
             });

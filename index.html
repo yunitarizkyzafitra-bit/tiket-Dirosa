@@ -102,8 +102,14 @@
                                     <label class="small mb-1 font-weight-bold">Nama Pengambil:</label>
                                     <input type="text" id="nama" class="form-control form-control-sm" placeholder="Nama lengkap pengambil">
                                     
-                                    <label class="small mt-2 mb-1 font-weight-bold">No. HP/WA:</label>
-                                    <input type="text" id="hp" class="form-control form-control-sm" placeholder="Contoh: 08123456789">
+                                    <label class="small mt-2 mb-1 font-weight-bold">No. HP/WA (Diawali Kode Negara 62):</label>
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-success text-white font-weight-bold">+62</span>
+                                        </div>
+                                        <input type="text" id="hp" class="form-control form-control-sm" placeholder="8123456789 (tanpa angka 0 di depan)">
+                                    </div>
+                                    <small class="text-muted font-italic" style="font-size: 10px;">Contoh: 8123456789 (otomatis terformat ke 628123456789)</small>
                                     
                                     <label class="small mt-2 mb-1 font-weight-bold">Alamat:</label>
                                     <input type="text" id="alamat" class="form-control form-control-sm" placeholder="Kecamatan / Kelurahan">
@@ -199,34 +205,36 @@
                 
                 const tbody = document.getElementById('transaksi-body');
                 tbody.innerHTML = data.slice().reverse().map(r => {
-                    // Pemetaan Persis Urutan Kolom Spreadsheet Anda:
-                    // Index 0: Tgl
-                    // Index 1: No
-                    // Index 2: PJ
-                    // Index 3: Nama Pengambil
-                    // Index 4: No. HP/WA
-                    // Index 5: Alamat
-                    // Index 6: Jml
-                    // Index 7: Status
-                    // Index 8: Aksi WhatsApp Cerdas
                     let tglStr        = r[0] || '-';
                     let noTiketStr    = r[1] || '-';
                     let pjStr         = r[2] || '-';
                     let namaPengambil = r[3] || '-';
-                    let noHp          = r[4] || '-';
+                    let rawHp         = r[4] || '-';
                     let alamatStr     = r[5] || '-';
                     let jumlahStr     = r[6] || '1';
                     let status        = r[7] || 'Lunas';
                     
                     let badgeColor = status === 'Lunas' ? 'badge-danger' : 'badge-warning text-white';
                     
-                    // Pesan Otomatis Penagihan Tiket Tasyakuran
+                    // Format tampilan nomor HP di tabel agar rapi dengan awalan +62 jika belum ada
+                    let displayHp = rawHp;
+                    if (rawHp && rawHp !== '-') {
+                        let cleanNum = rawHp.toString().trim().replace(/[^0-9]/g, '');
+                        if (cleanNum.startsWith('0')) {
+                            cleanNum = '62' + cleanNum.substring(1);
+                        } else if (!cleanNum.startsWith('62')) {
+                            cleanNum = '62' + cleanNum;
+                        }
+                        displayHp = '+' + cleanNum;
+                    }
+                    
                     let pesanWA = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Yth. ${namaPengambil}.\n\nKami dari Panitia Tasyakuran Dirosa Angkatan IX mengingatkan terkait tiket yang telah diambil dengan Nomor: *${noTiketStr}* (Status: *${status}*).\n\nDana tiket yang sudah terjual mohon dapat segera ditransfer melalui No. Rekening:\n*7113235807* (Bank BSI) a.n. *Masnah*.\n\nJazaakumullahu khairan katsiran.`;
                     let encodedPesan = encodeURIComponent(pesanWA);
                     
                     let cleanPhone = '';
-                    if (noHp && noHp !== '-') {
-                        cleanPhone = String(noHp).trim().replace(/^0/, '62').replace(/[^0-9]/g, '');
+                    if (rawHp && rawHp !== '-') {
+                        cleanPhone = String(rawHp).trim().replace(/^0/, '62').replace(/[^0-9]/g, '');
+                        if (!cleanPhone.startsWith('62')) cleanPhone = '62' + cleanPhone;
                     }
                     
                     let waLink = cleanPhone ? `
@@ -239,7 +247,7 @@
                         <td class="font-weight-bold text-center">${noTiketStr}</td>
                         <td>${pjStr}</td>
                         <td>${namaPengambil}</td>
-                        <td>${noHp}</td>
+                        <td>${displayHp}</td>
                         <td>${alamatStr}</td>
                         <td class="text-center">${jumlahStr}</td>
                         <td class="text-center"><span class="badge ${badgeColor}">${status}</span></td>
@@ -299,6 +307,17 @@
             if (no < RANGES[pj][0] || no > RANGES[pj][1]) return alert(`Nomor tiket ${no} di luar jangkauan wilayah tugas Anda (${RANGES[pj][0]}-${RANGES[pj][1]})!`);
             if (ticketDataMap[no]) return alert("Nomor tiket ini sudah tercatat di sistem sebelumnya!");
 
+            // Normalisasi otomatis nomor WhatsApp berawalan kode negara 62 saat disimpan
+            let rawInputHp = document.getElementById('hp').value.trim();
+            if (!rawInputHp) return alert("Nomor HP/WA wajib diisi!");
+            let cleanHp = rawInputHp.replace(/[^0-9]/g, '');
+            if (cleanHp.startsWith('0')) {
+                cleanHp = '62' + cleanHp.substring(1);
+            } else if (!cleanHp.startsWith('62')) {
+                cleanHp = '62' + cleanHp;
+            }
+            let finalStoredHp = '+' + cleanHp;
+
             isSaving = true; document.getElementById('save-btn').innerText = "Menyimpan ke Database...";
             const payload = { 
                 tgl: document.getElementById('tgl').value,
@@ -307,7 +326,7 @@
                 username: document.getElementById('username').value, 
                 pin: pin, 
                 nama: document.getElementById('nama').value,
-                hp: document.getElementById('hp').value, 
+                hp: finalStoredHp, 
                 alamat: document.getElementById('alamat').value,
                 jumlah: document.getElementById('jumlah').value,
                 status: document.getElementById('status_bayar').value

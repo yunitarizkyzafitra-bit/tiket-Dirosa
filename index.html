@@ -13,9 +13,9 @@
         .nav-link.active { background-color: #047857 !important; color: #fff !important; }
         .ticket-box { padding: 4px; text-align: center; border-radius: 3px; color: white; font-weight: bold; font-size: 10px; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; transition: transform 0.2s; }
         .ticket-box:hover { transform: scale(1.15); z-index: 10; }
-        .bg-hijau { background-color: #10b981; } 
-        .bg-kuning { background-color: #f59e0b; color: #fff; } 
-        .bg-merah { background-color: #ef4444; } 
+        .bg-hijau { background-color: #10b981 !important; } 
+        .bg-kuning { background-color: #f59e0b !important; color: #fff !important; } 
+        .bg-merah { background-color: #ef4444 !important; color: #fff !important; } 
         #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(35px, 1fr)); gap: 3px; max-height: 250px; overflow-y: auto; padding: 5px; background: #f8f9fa; border-radius: 5px; border: 1px solid #dee2e6; }
         .chart-container { max-width: 170px; margin: 0 auto; }
         .table-responsive { overflow-x: auto; max-height: 400px; }
@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                <!-- Input Action Panel (Disesuaikan Urutan: Tanggal, No Urut, PJ, Keterangan/Nama, No.hp, Alamat) -->
+                <!-- Input Action Panel -->
                 <div class="col-md-8">
                     <div class="card p-3">
                         <div class="d-flex justify-content-between mb-2">
@@ -143,7 +143,7 @@
                 <div id="grid"></div>
             </div>
 
-            <!-- Transaction History Table (Urutan Kolom Presisi Sesuai Spreadsheet, Tanpa Kolom Jumlah) -->
+            <!-- Transaction History Table -->
             <div class="card p-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h5 class="font-weight-bold mb-0" style="font-size: 14px;"><i class="fas fa-list text-primary"></i> Riwayat & Pengendalian Transaksi Tiket</h5>
@@ -188,19 +188,19 @@
                 const data = await res.json();
                 
                 ticketDataMap = {};
+                
+                // Pemetaan Indeks Kolom Sesuai Urutan Spreadsheet Anda:
+                // [0]: No Urut | [1]: Tanggal | [2]: PJ | [3]: Target | [4]: Status | [5]: Keterangan | [6]: No.hp | [7]: Alamat
                 data.forEach(r => {
-                    // Indeks disesuaikan: Kolom ke-0 adalah No Urut, Kolom ke-4 adalah Status
                     let noUrut = parseInt(r[0]);
-                    let statusBayar = r[4] || 'Lunas';
-                    if (!isNaN(noUrut)) {
+                    let statusBayar = String(r[4] || '').trim(); // Mengambil kolom Status (indeks ke-4)
+                    if (!isNaN(noUrut) && statusBayar !== '') {
                         ticketDataMap[noUrut] = statusBayar;
                     }
                 });
                 
                 const tbody = document.getElementById('transaksi-body');
                 tbody.innerHTML = data.slice().reverse().map(r => {
-                    // Pemetaan indeks array berdasarkan urutan spreadsheet:
-                    // r[0]: No Urut, r[1]: Tanggal, r[2]: PJ, r[3]: Target, r[4]: Status, r[5]: Keterangan, r[6]: No.hp, r[7]: Alamat
                     let noUrutVal  = r[0] || '-';
                     let tanggalVal = r[1] || '-';
                     let pjVal      = r[2] || '-';
@@ -210,9 +210,8 @@
                     let rawHp      = r[6] || '-';
                     let alamatVal  = r[7] || '-';
                     
-                    let badgeColor = statusVal === 'Lunas' ? 'badge-danger' : 'badge-warning text-white';
+                    let badgeColor = (statusVal.toLowerCase().includes('belum')) ? 'badge-warning text-white' : 'badge-danger';
                     
-                    // Normalisasi Nomor HP untuk tombol WhatsApp agar 100% connect tanpa kendala
                     let cleanPhone = '';
                     let displayHp = rawHp;
                     if (rawHp && rawHp !== '-') {
@@ -231,7 +230,7 @@
                     let waLink = cleanPhone ? `
                         <a href="https://wa.me/${cleanPhone}?text=${encodedPesan}" target="_blank" class="btn btn-success btn-xs font-weight-bold px-2 py-1 shadow-sm">
                             <i class="fab fa-whatsapp"></i> Chat WA
-                        ` : '<span class="text-muted small">Invalid</span>';
+                        </a>` : '<span class="text-muted small">Invalid</span>';
 
                     return `<tr>
                         <td class="font-weight-bold text-center">${noUrutVal}</td>
@@ -249,7 +248,7 @@
                 let soldCount = Object.keys(ticketDataMap).length;
                 document.getElementById('total-percent').innerText = ((soldCount / 450) * 100).toFixed(1) + "%";
                 
-                let lunasCount = Object.values(ticketDataMap).filter(s => s === 'Lunas').length;
+                let lunasCount = Object.values(ticketDataMap).filter(s => !s.toLowerCase().includes('belum')).length;
                 let belumCount = soldCount - lunasCount;
 
                 if (chartInstance) { chartInstance.destroy(); }
@@ -263,6 +262,7 @@
                     options: { responsive: true, maintainAspectRatio: true }
                 });
                 
+                // Sinkronisasi Warna Grid berdasarkan Status di Spreadsheet
                 const grid = document.getElementById('grid'); 
                 grid.innerHTML = "";
                 for(let i=1; i<=450; i++) {
@@ -271,12 +271,12 @@
                     let titleText = `Tiket No ${i} : Tersedia`;
 
                     if (statusStat) {
-                        if (statusStat === 'Lunas') {
-                            boxClass = 'bg-merah';
-                            titleText = `Tiket No ${i} : Terjual (Lunas)`;
-                        } else {
+                        if (statusStat.toLowerCase().includes('belum')) {
                             boxClass = 'bg-kuning';
                             titleText = `Tiket No ${i} : Dipesan (Belum Lunas)`;
+                        } else {
+                            boxClass = 'bg-merah';
+                            titleText = `Tiket No ${i} : Terjual (Lunas)`;
                         }
                     }
 
@@ -309,13 +309,12 @@
 
             isSaving = true; document.getElementById('save-btn').innerText = "Menyimpan...";
             
-            // PAYLOAD DISESUAIKAN PERSIS URUTAN KOLOM SPREADSHEET:
-            // [No Urut, Tanggal, PJ, Target, Status, Keterangan, No.hp, Alamat]
+            // PAYLOAD SESUAI PERSIS URUTAN KOLOM: No Urut | Tanggal | PJ | Target | Status | Keterangan | No.hp | Alamat
             const payload = {
                 no_urut: noUrut,
                 tanggal: document.getElementById('tanggal').value,
                 pj: pj,
-                target: "-", // Diisi default agar kolom target aman
+                target: "Terjual", 
                 status: document.getElementById('status').value,
                 keterangan: document.getElementById('keterangan').value,
                 no_hp: finalStoredHp,

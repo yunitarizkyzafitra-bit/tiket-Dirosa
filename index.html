@@ -42,9 +42,6 @@
                         </li>
                     </ul>
                 </nav>
-                <div style="position: absolute; bottom: 20px; width: 100%; padding: 0 15px;">
-                    <img src="https://raw.githubusercontent.com/yunitarizkyzafitra-bit/E-Tiket_Dirosa_2026/main/Gambar%20Tiket.png" width="100%" style="border-radius: 5px;" alt="Banner Tiket">
-                </div>
             </div>
         </aside>
 
@@ -70,7 +67,7 @@
                     </div>
                 </div>
 
-                <!-- Input Action Panel -->
+                <!-- Input Action Panel (Disesuaikan Urutan: Tanggal, No Urut, PJ, Keterangan/Nama, No.hp, Alamat) -->
                 <div class="col-md-8">
                     <div class="card p-3">
                         <div class="d-flex justify-content-between mb-2">
@@ -82,49 +79,46 @@
                             <h6 class="text-bold text-dark mb-2 border-bottom pb-1"><i class="fas fa-edit text-primary"></i> Form Kontrol & Pendataan Tiket Terintegrasi</h6>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="small mb-1 font-weight-bold">Nomor Tiket (No):</label>
-                                    <input type="number" id="no" class="form-control form-control-sm bg-white" placeholder="Klik nomor di grid bawah" readonly>
+                                    <label class="small mb-1 font-weight-bold">Tanggal:</label>
+                                    <input type="date" id="tanggal" class="form-control form-control-sm">
                                     
-                                    <label class="small mt-2 mb-1 font-weight-bold">Tanggal Transaksi (Tgl):</label>
-                                    <input type="date" id="tgl" class="form-control form-control-sm">
+                                    <label class="small mt-2 mb-1 font-weight-bold">No Urut (No Tiket):</label>
+                                    <input type="number" id="no_urut" class="form-control form-control-sm bg-white" placeholder="Klik nomor di grid bawah" readonly>
                                     
-                                    <label class="small mt-2 mb-1 font-weight-bold">Penanggung Jawab (PJ):</label>
+                                    <label class="small mt-2 mb-1 font-weight-bold">PJ:</label>
                                     <select id="pj" class="form-control form-control-sm">
                                         <option>Ummu Nabila</option><option>Teteh Lilis</option>
                                         <option>Ummu Yasmin</option><option>Cadangan</option>
                                     </select>
                                     
-                                    <label class="small mt-2 mb-1 font-weight-bold">Verifikasi PJ & PIN Akses:</label>
-                                    <input type="text" id="username" class="form-control form-control-sm mb-1" placeholder="Username PJ">
-                                    <input type="password" id="pin" class="form-control form-control-sm" placeholder="PIN Akses Keamanan">
+                                    <label class="small mt-2 mb-1 font-weight-bold">Keterangan (Nama Pengambil):</label>
+                                    <input type="text" id="keterangan" class="form-control form-control-sm" placeholder="Nama lengkap pengambil / keterangan">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="small mb-1 font-weight-bold">Nama Pengambil:</label>
-                                    <input type="text" id="nama" class="form-control form-control-sm" placeholder="Nama lengkap pengambil">
-                                    
-                                    <label class="small mt-2 mb-1 font-weight-bold">No. HP/WA (Diawali Kode Negara 62):</label>
+                                    <label class="small mb-1 font-weight-bold">No.hp (WhatsApp):</label>
                                     <div class="input-group input-group-sm">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text bg-success text-white font-weight-bold">+62</span>
                                         </div>
-                                        <input type="text" id="hp" class="form-control form-control-sm" placeholder="8123456789 (tanpa angka 0 di depan)">
+                                        <input type="text" id="no_hp" class="form-control form-control-sm" placeholder="8123456789 (tanpa angka 0 di depan)">
                                     </div>
-                                    <small class="text-muted font-italic" style="font-size: 10px;">Contoh: 8123456789 (otomatis terformat ke 628123456789)</small>
+                                    <small class="text-muted font-italic" style="font-size: 10px;">Otomatis terformat ke 62...</small>
                                     
                                     <label class="small mt-2 mb-1 font-weight-bold">Alamat:</label>
                                     <input type="text" id="alamat" class="form-control form-control-sm" placeholder="Kecamatan / Kelurahan">
                                     
-                                    <div class="row">
+                                    <label class="small mt-2 mb-1 font-weight-bold">Status:</label>
+                                    <select id="status" class="form-control form-control-sm">
+                                        <option value="Lunas">Lunas (Merah)</option>
+                                        <option value="Belum Lunas">Belum Lunas (Kuning)</option>
+                                    </select>
+
+                                    <div class="row mt-2">
                                         <div class="col-6">
-                                            <label class="small mt-2 mb-1 font-weight-bold">Jumlah (Jml):</label>
-                                            <input type="number" id="jumlah" class="form-control form-control-sm" value="1">
+                                            <input type="text" id="username" class="form-control form-control-sm" placeholder="User PJ">
                                         </div>
                                         <div class="col-6">
-                                            <label class="small mt-2 mb-1 font-weight-bold">Status Bayar (Status):</label>
-                                            <select id="status_bayar" class="form-control form-control-sm">
-                                                <option value="Lunas">Lunas (Merah)</option>
-                                                <option value="Belum Lunas">Belum Lunas (Kuning)</option>
-                                            </select>
+                                            <input type="password" id="pin" class="form-control form-control-sm" placeholder="PIN">
                                         </div>
                                     </div>
                                 </div>
@@ -146,31 +140,30 @@
                         <span class="badge badge-danger px-2">Lunas (Merah)</span>
                     </small>
                 </div>
-                <small class="text-muted mb-2 d-block" style="font-size: 11px;">Petunjuk: Klik nomor kotak berwarna hijau untuk melakukan input data baru.</small>
                 <div id="grid"></div>
             </div>
 
-            <!-- Transaction History Table -->
+            <!-- Transaction History Table (Urutan Kolom Presisi Sesuai Spreadsheet, Tanpa Kolom Jumlah) -->
             <div class="card p-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h5 class="font-weight-bold mb-0" style="font-size: 14px;"><i class="fas fa-list text-primary"></i> Riwayat & Pengendalian Transaksi Tiket</h5>
                 </div>
                 <div class="input-group mb-2 no-print">
-                    <input type="text" id="search-pj" class="form-control form-control-sm" placeholder="Cari berdasarkan nama pengambil, PJ, alamat, atau status pembayaran..." onkeyup="filterTable()">
+                    <input type="text" id="search-pj" class="form-control form-control-sm" placeholder="Cari berdasarkan nomor, PJ, keterangan, atau alamat..." onkeyup="filterTable()">
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-sm text-xs">
                         <thead class="bg-dark text-center">
                             <tr>
-                                <th>Tgl</th>
-                                <th>No</th>
+                                <th>No Urut</th>
+                                <th>Tanggal</th>
                                 <th>PJ</th>
-                                <th>Nama Pengambil</th>
-                                <th>No. HP/WA</th>
-                                <th>Alamat</th>
-                                <th>Jml</th>
+                                <th>Target</th>
                                 <th>Status</th>
-                                <th class="no-print">Aksi WhatsApp Cerdas</th>
+                                <th>Keterangan</th>
+                                <th>No.hp</th>
+                                <th>Alamat</th>
+                                <th class="no-print">WhatsApp Cerdas</th>
                             </tr>
                         </thead>
                         <tbody id="transaksi-body"></tbody>
@@ -196,61 +189,59 @@
                 
                 ticketDataMap = {};
                 data.forEach(r => {
-                    let noTiket = parseInt(r[1]); // Indeks 1 sesuai kolom No
-                    let statusBayar = r[7] || 'Lunas'; // Indeks 7 sesuai kolom Status
-                    if (!isNaN(noTiket)) {
-                        ticketDataMap[noTiket] = statusBayar;
+                    // Indeks disesuaikan: Kolom ke-0 adalah No Urut, Kolom ke-4 adalah Status
+                    let noUrut = parseInt(r[0]);
+                    let statusBayar = r[4] || 'Lunas';
+                    if (!isNaN(noUrut)) {
+                        ticketDataMap[noUrut] = statusBayar;
                     }
                 });
                 
                 const tbody = document.getElementById('transaksi-body');
                 tbody.innerHTML = data.slice().reverse().map(r => {
-                    let tglStr        = r[0] || '-';
-                    let noTiketStr    = r[1] || '-';
-                    let pjStr         = r[2] || '-';
-                    let namaPengambil = r[3] || '-';
-                    let rawHp         = r[4] || '-';
-                    let alamatStr     = r[5] || '-';
-                    let jumlahStr     = r[6] || '1';
-                    let status        = r[7] || 'Lunas';
+                    // Pemetaan indeks array berdasarkan urutan spreadsheet:
+                    // r[0]: No Urut, r[1]: Tanggal, r[2]: PJ, r[3]: Target, r[4]: Status, r[5]: Keterangan, r[6]: No.hp, r[7]: Alamat
+                    let noUrutVal  = r[0] || '-';
+                    let tanggalVal = r[1] || '-';
+                    let pjVal      = r[2] || '-';
+                    let targetVal  = r[3] || '-';
+                    let statusVal  = r[4] || 'Lunas';
+                    let ketVal     = r[5] || '-';
+                    let rawHp      = r[6] || '-';
+                    let alamatVal  = r[7] || '-';
                     
-                    let badgeColor = status === 'Lunas' ? 'badge-danger' : 'badge-warning text-white';
+                    let badgeColor = statusVal === 'Lunas' ? 'badge-danger' : 'badge-warning text-white';
                     
-                    // Format tampilan nomor HP di tabel agar rapi dengan awalan +62 jika belum ada
+                    // Normalisasi Nomor HP untuk tombol WhatsApp agar 100% connect tanpa kendala
+                    let cleanPhone = '';
                     let displayHp = rawHp;
                     if (rawHp && rawHp !== '-') {
-                        let cleanNum = rawHp.toString().trim().replace(/[^0-9]/g, '');
-                        if (cleanNum.startsWith('0')) {
-                            cleanNum = '62' + cleanNum.substring(1);
-                        } else if (!cleanNum.startsWith('62')) {
-                            cleanNum = '62' + cleanNum;
+                        cleanPhone = String(rawHp).trim().replace(/[^0-9]/g, '');
+                        if (cleanPhone.startsWith('0')) {
+                            cleanPhone = '62' + cleanPhone.substring(1);
+                        } else if (!cleanPhone.startsWith('62')) {
+                            cleanPhone = '62' + cleanPhone;
                         }
-                        displayHp = '+' + cleanNum;
+                        displayHp = '+' + cleanPhone;
                     }
                     
-                    let pesanWA = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Yth. ${namaPengambil}.\n\nKami dari Panitia Tasyakuran Dirosa Angkatan IX mengingatkan terkait tiket yang telah diambil dengan Nomor: *${noTiketStr}* (Status: *${status}*).\n\nDana tiket yang sudah terjual mohon dapat segera ditransfer melalui No. Rekening:\n*7113235807* (Bank BSI) a.n. *Masnah*.\n\nJazaakumullahu khairan katsiran.`;
+                    let pesanWA = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Yth. ${ketVal}.\n\nKami dari Panitia Tasyakuran Dirosa Angkatan IX mengingatkan terkait tiket Nomor: *${noUrutVal}* (Status: *${statusVal}*).\n\nDana tiket mohon ditransfer melalui BSI Rek: *7113235807* a.n. *Masnah*.\n\nJazaakumullahu khairan katsiran.`;
                     let encodedPesan = encodeURIComponent(pesanWA);
                     
-                    let cleanPhone = '';
-                    if (rawHp && rawHp !== '-') {
-                        cleanPhone = String(rawHp).trim().replace(/^0/, '62').replace(/[^0-9]/g, '');
-                        if (!cleanPhone.startsWith('62')) cleanPhone = '62' + cleanPhone;
-                    }
-                    
                     let waLink = cleanPhone ? `
-                        <a href="https://wa.me/${cleanPhone}?text=${encodedPesan}" target="_blank" class="btn btn-success btn-xs font-weight-bold px-2 py-1 shadow-sm" title="Kirim Pesan WhatsApp Langsung">
-                            <i class="fab fa-whatsapp"></i> Chat WhatsApp
-                        </a>` : '<span class="text-muted small">No HP Tidak Valid</span>';
+                        <a href="https://wa.me/${cleanPhone}?text=${encodedPesan}" target="_blank" class="btn btn-success btn-xs font-weight-bold px-2 py-1 shadow-sm">
+                            <i class="fab fa-whatsapp"></i> Chat WA
+                        ` : '<span class="text-muted small">Invalid</span>';
 
                     return `<tr>
-                        <td>${tglStr}</td>
-                        <td class="font-weight-bold text-center">${noTiketStr}</td>
-                        <td>${pjStr}</td>
-                        <td>${namaPengambil}</td>
+                        <td class="font-weight-bold text-center">${noUrutVal}</td>
+                        <td>${tanggalVal}</td>
+                        <td>${pjVal}</td>
+                        <td>${targetVal}</td>
+                        <td class="text-center"><span class="badge ${badgeColor}">${statusVal}</span></td>
+                        <td>${ketVal}</td>
                         <td>${displayHp}</td>
-                        <td>${alamatStr}</td>
-                        <td class="text-center">${jumlahStr}</td>
-                        <td class="text-center"><span class="badge ${badgeColor}">${status}</span></td>
+                        <td>${alamatVal}</td>
                         <td class="text-center no-print">${waLink}</td>
                     </tr>`;
                 }).join('');
@@ -261,9 +252,7 @@
                 let lunasCount = Object.values(ticketDataMap).filter(s => s === 'Lunas').length;
                 let belumCount = soldCount - lunasCount;
 
-                if (chartInstance) {
-                    chartInstance.destroy();
-                }
+                if (chartInstance) { chartInstance.destroy(); }
 
                 chartInstance = new Chart(document.getElementById('myChart'), { 
                     type: 'doughnut', 
@@ -291,7 +280,7 @@
                         }
                     }
 
-                    grid.innerHTML += `<div class="ticket-box ${boxClass}" ${!statusStat ? `onclick="selectTicket(${i})"` : `title="${titleText} (Sudah Diambil)"`}>${i}</div>`;
+                    grid.innerHTML += `<div class="ticket-box ${boxClass}" ${!statusStat ? `onclick="selectTicket(${i})"` : `title="${titleText}"`}>${i}</div>`;
                 }
             } catch(e) { console.error("Gagal sinkronisasi data:", e); }
         }
@@ -299,17 +288,17 @@
         async function save() {
             if (isSaving) return;
             const pj = document.getElementById('pj').value;
-            const no = parseInt(document.getElementById('no').value);
+            const noUrut = parseInt(document.getElementById('no_urut').value);
             const pin = document.getElementById('pin').value;
             
-            if (!no) return alert("Silakan pilih nomor tiket terlebih dahulu dari kotak grid!");
-            if (PINS[pj] !== pin) return alert("PIN Akses Keamanan Salah untuk PJ wilayah ini!");
-            if (no < RANGES[pj][0] || no > RANGES[pj][1]) return alert(`Nomor tiket ${no} di luar jangkauan wilayah tugas Anda (${RANGES[pj][0]}-${RANGES[pj][1]})!`);
-            if (ticketDataMap[no]) return alert("Nomor tiket ini sudah tercatat di sistem sebelumnya!");
+            if (!noUrut) return alert("Silakan pilih nomor urut tiket dari kotak grid terlebih dahulu!");
+            if (PINS[pj] !== pin) return alert("PIN Akses Keamanan Salah!");
+            if (noUrut < RANGES[pj][0] || noUrut > RANGES[pj][1]) return alert(`Nomor di luar jangkauan wilayah tugas Anda (${RANGES[pj][0]}-${RANGES[pj][1]})!`);
+            if (ticketDataMap[noUrut]) return alert("Nomor tiket ini sudah tercatat sebelumnya!");
 
-            // Normalisasi otomatis nomor WhatsApp berawalan kode negara 62 saat disimpan
-            let rawInputHp = document.getElementById('hp').value.trim();
+            let rawInputHp = document.getElementById('no_hp').value.trim();
             if (!rawInputHp) return alert("Nomor HP/WA wajib diisi!");
+            
             let cleanHp = rawInputHp.replace(/[^0-9]/g, '');
             if (cleanHp.startsWith('0')) {
                 cleanHp = '62' + cleanHp.substring(1);
@@ -318,24 +307,31 @@
             }
             let finalStoredHp = '+' + cleanHp;
 
-            isSaving = true; document.getElementById('save-btn').innerText = "Menyimpan ke Database...";
-            const payload = { 
-                tgl: document.getElementById('tgl').value,
-                no: no, 
-                pj: pj, 
-                username: document.getElementById('username').value, 
-                pin: pin, 
-                nama: document.getElementById('nama').value,
-                hp: finalStoredHp, 
+            isSaving = true; document.getElementById('save-btn').innerText = "Menyimpan...";
+            
+            // PAYLOAD DISESUAIKAN PERSIS URUTAN KOLOM SPREADSHEET:
+            // [No Urut, Tanggal, PJ, Target, Status, Keterangan, No.hp, Alamat]
+            const payload = {
+                no_urut: noUrut,
+                tanggal: document.getElementById('tanggal').value,
+                pj: pj,
+                target: "-", // Diisi default agar kolom target aman
+                status: document.getElementById('status').value,
+                keterangan: document.getElementById('keterangan').value,
+                no_hp: finalStoredHp,
                 alamat: document.getElementById('alamat').value,
-                jumlah: document.getElementById('jumlah').value,
-                status: document.getElementById('status_bayar').value
+                username: document.getElementById('username').value,
+                pin: pin
             };
             
             try {
                 await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-                alert("Data kontrol tiket berhasil disimpan dengan aman!"); location.reload();
-            } catch (e) { alert("Gagal koneksi ke server database."); isSaving = false; document.getElementById('save-btn').innerText = "Simpan Data Kontrol Tiket"; }
+                alert("Data berhasil disimpan!"); location.reload();
+            } catch (e) { 
+                alert("Gagal koneksi ke server database."); 
+                isSaving = false; 
+                document.getElementById('save-btn').innerText = "Simpan Data Kontrol Tiket"; 
+            }
         }
 
         function filterTable() {
@@ -349,7 +345,7 @@
         function showAuth() { document.getElementById('input-panel').style.display = 'block'; }
         function closeInput() { document.getElementById('input-panel').style.display = 'none'; }
         function selectTicket(no) { 
-            document.getElementById('no').value = no; 
+            document.getElementById('no_urut').value = no; 
             showAuth(); 
             window.scrollTo({ top: 150, behavior: 'smooth' });
         }

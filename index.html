@@ -190,10 +190,10 @@
                 ticketDataMap = {};
                 
                 // Pemetaan Indeks Kolom Sesuai Urutan Spreadsheet Anda:
-                // [0]: No Urut | [1]: Tanggal | [2]: PJ | [3]: Target | [4]: Status | [5]: Keterangan | [6]: No.hp | [7]: Alamat
+                // r[0]: No Urut | r[1]: Tanggal | r[2]: PJ | r[3]: Target | r[4]: Status | r[5]: Keterangan | r[6]: No.hp | r[7]: Alamat
                 data.forEach(r => {
                     let noUrut = parseInt(r[0]);
-                    let statusBayar = String(r[4] || '').trim(); // Mengambil kolom Status (indeks ke-4)
+                    let statusBayar = String(r[4] || '').trim(); 
                     if (!isNaN(noUrut) && statusBayar !== '') {
                         ticketDataMap[noUrut] = statusBayar;
                     }
@@ -262,7 +262,6 @@
                     options: { responsive: true, maintainAspectRatio: true }
                 });
                 
-                // Sinkronisasi Warna Grid berdasarkan Status di Spreadsheet
                 const grid = document.getElementById('grid'); 
                 grid.innerHTML = "";
                 for(let i=1; i<=450; i++) {
@@ -309,7 +308,7 @@
 
             isSaving = true; document.getElementById('save-btn').innerText = "Menyimpan...";
             
-            // PAYLOAD SESUAI PERSIS URUTAN KOLOM: No Urut | Tanggal | PJ | Target | Status | Keterangan | No.hp | Alamat
+            // PAYLOAD SESUAI PERSIS URUTAN: No Urut | Tanggal | PJ | Target | Status | Keterangan | No.hp | Alamat
             const payload = {
                 no_urut: noUrut,
                 tanggal: document.getElementById('tanggal').value,
